@@ -33,44 +33,43 @@ public class Main extends Application {
     public static double height = 720;
     public static double playerOneYPos = height / 2;
     public static double playerTwoYPos = height / 2;
-    public static final double speedConstant = 1.1;
     public double playerOneXPos = 5.0;
     public double playerTwoXPos = width - GoalKeeper_Width - 5;
     public double BallYSpeed = 1;
     public double BallXSpeed = 2;
     public double MoveSpeed = 10;
-    public double BallXPosition = width / 2;
-    public double BallYPosition = height / 2;
-    public static String startText = "Click Enter to start the game";
-    public boolean GameRunning;
-    public boolean PlayOneUP = false;
-    public boolean PlayTwoUP = false;
-    public boolean PlayOneDown = false;
-    public boolean PlayTwoDown = false;
-    public boolean playerOneturn = true;
-    public boolean playerTwoturn = true;
-    public int touches = 0;
-    public boolean PvC = false;
-    public static final double BallRadius = 15;
-    public Color EntitiesColor = Color.WHITE;
-    public Color Background = Color.BLACK;
+    static final double BallRadius = 15;
+    static String startText = "Click Enter to start the game";
+    double BallXPosition = width / 2;
+    double BallYPosition = height / 2;
+    boolean GameRunning;
+    boolean PlayOneUP = false;
+    boolean PlayTwoUP = false;
+    boolean PlayOneDown = false;
+    boolean PlayTwoDown = false;
+    boolean playerOneturn = true;
+    boolean playerTwoturn = true;
+    int touches = 0;
+    boolean PvC = false;
+    Color EntitiesColor = Color.WHITE;
+    Color Background = Color.BLACK;
 
-    public boolean Multiplayer = false;
+    boolean Multiplayer = false;
 
     // Multiplayer
-    public String ip = "localhost";
-    public int port = 22222;
-    public Thread thread;
+    String ip = "localhost";
+    int port = 22222;
+    Thread thread;
 
-    public Socket socket;
-    public ObjectOutputStream  output;
-    public ObjectInputStream  input;
-    public int errors = 0;
-    public ServerSocket serverSocket;
-    public boolean connected = false;
-    public boolean NoConnectionWithPartner = false;
-    public boolean isplayerOne = false;
-    public boolean isplayerTwo = false;
+    Socket socket;
+    ObjectOutputStream output;
+    ObjectInputStream input;
+    int errors = 0;
+    ServerSocket serverSocket;
+    boolean connected = false;
+    boolean NoConnectionWithPartner = false;
+    boolean isplayerOne = false;
+    boolean isplayerTwo = false;
 
 
 
@@ -132,7 +131,7 @@ public class Main extends Application {
                     }
                 }
                 try {
-                    thread.sleep(5);
+                    Thread.sleep(5);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
