@@ -15,7 +15,9 @@ import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 
 import javax.swing.*;
-import java.io.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
@@ -56,7 +58,7 @@ public class Main extends Application {
     public boolean Multiplayer = false;
 
     // Multiplayer
-    public String ip = "83.227.81.158";
+    public String ip = "localhost";
     public int port = 22222;
     public Thread thread;
 

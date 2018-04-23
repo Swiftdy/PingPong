@@ -5,7 +5,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -15,7 +17,7 @@ import java.util.Random;
 public class StartGame {
     static void DrawGame(Main main, GraphicsContext GameBoard) {
 
-       //System.out.println("Multiplayer: " + main.Multiplayer + ", Connected: " + main.connected + ", PlayerOnePosition: " + Main.playerOneYPos + ", Player 1: " + main.isplayerOne + ", Player 2:" + main.isplayerTwo);
+        //System.out.println("Multiplayer: " + main.Multiplayer + ", Connected: " + main.connected + ", PlayerOnePosition: " + Main.playerOneYPos + ", Player 1: " + main.isplayerOne + ", Player 2:" + main.isplayerTwo);
 
         if(main.Multiplayer & !main.GameRunning & !main.connected) {
             if (!connect(main) & !main.GameRunning) initializeServer(main);
@@ -41,7 +43,7 @@ public class StartGame {
         GameBoard.setFill(Color.WHITE);
         GameBoard.setFont(Font.font(20));
         InitGame(main, GameBoard);
-        if (main.playerOneturn && main.BallYPosition >= main.playerOneYPos && main.BallYPosition <= main.playerOneYPos + Main.GoalKeeper_Height && main.BallXPosition - Main.BallRadius <= main.playerOneXPos + Main.GoalKeeper_Width/2) {
+        if (main.playerOneturn && main.BallYPosition >= Main.playerOneYPos && main.BallYPosition <= Main.playerOneYPos + Main.GoalKeeper_Height && main.BallXPosition - Main.BallRadius <= main.playerOneXPos + Main.GoalKeeper_Width / 2) {
             main.playerTwoturn = true;
             main.playerOneturn = false;
             main.touches++;
@@ -49,7 +51,7 @@ public class StartGame {
             main.BallYSpeed = -5 + (int) (Math.random() * ((5 - (-5)) + 1));
             main.BallXSpeed *= -1;
         }
-        if (main.playerTwoturn && main.BallYPosition >= main.playerTwoYPos && main.BallYPosition <= main.playerTwoYPos +  Main.GoalKeeper_Height && main.BallXPosition + Main.BallRadius >= main.playerTwoXPos) {
+        if (main.playerTwoturn && main.BallYPosition >= Main.playerTwoYPos && main.BallYPosition <= Main.playerTwoYPos + Main.GoalKeeper_Height && main.BallXPosition + Main.BallRadius >= main.playerTwoXPos) {
             main.playerTwoturn = false;
             main.playerOneturn = true;
             main.touches++;
@@ -65,7 +67,13 @@ public class StartGame {
         if(main.BallXPosition < main.playerOneXPos - Main.GoalKeeper_Width) {
             main.PlayerTwoScore += 1;
             main.touches = 0;
-            Main.startText = "Player Two Won!\nClick enter to start next round!";
+            if (main.Multiplayer & main.isplayerOne) {
+                Main.startText = "Player Two Won!\nClick enter to start next round!";
+            } else if (main.Multiplayer & main.isplayerTwo) {
+                Main.startText = "Player Two Won!\nWaiting on game to start!";
+            } else {
+                Main.startText = "Player Two Won!\nClick enter to start next round!";
+            }
             main.playerOneturn = true;
             main.playerTwoturn = true;
             main.GameRunning = false;
@@ -73,7 +81,13 @@ public class StartGame {
         if(main.BallXPosition > main.playerTwoXPos + Main.GoalKeeper_Width) {
             main.PlayerOneScore++;
             main.touches = 0;
-            Main.startText = "Player One Won!\nClick enter to start next round!";
+            if (main.Multiplayer & main.isplayerOne) {
+                Main.startText = "Player One Won!\nClick enter to start next round!";
+            } else if (main.Multiplayer & main.isplayerTwo) {
+                Main.startText = "Player One Won!\nWaiting on game to start!";
+            } else {
+                Main.startText = "Player One Won!\nClick enter to start next round!";
+            }
             main.playerOneturn = true;
             main.playerTwoturn = true;
             main.GameRunning = false;
@@ -87,7 +101,7 @@ public class StartGame {
         }
 
 
-
+/*
         if(main.PvC && main.playerTwoturn) {
             if(main.BallYPosition >= main.playerTwoYPos + Main.GoalKeeper_Height/2) {
                 main.playerTwoYPos += main.MoveSpeed - 3 ;
@@ -96,11 +110,12 @@ public class StartGame {
                 main.playerTwoYPos -= main.MoveSpeed - 3;
             }
         }
+        */
         /* Skappar Goal keepers! */
         GameBoard.setFill(Color.GHOSTWHITE);
-        GameBoard.fillRect(main.playerTwoXPos, main.playerTwoYPos, Main.GoalKeeper_Width, Main.GoalKeeper_Height);
+        GameBoard.fillRect(main.playerTwoXPos, Main.playerTwoYPos, Main.GoalKeeper_Width, Main.GoalKeeper_Height);
         GameBoard.setFill(Color.BLUE);
-        GameBoard.fillRect(main.playerOneXPos, main.playerOneYPos, Main.GoalKeeper_Width, Main.GoalKeeper_Height);
+        GameBoard.fillRect(main.playerOneXPos, Main.playerOneYPos, Main.GoalKeeper_Width, Main.GoalKeeper_Height);
         GameBoard.setFill(Color.WHITE);
     }
 
@@ -113,7 +128,6 @@ public class StartGame {
             main.input = new ObjectInputStream(socket.getInputStream());
             System.out.println("Client have connected");
             main.connected = true;
-            main.GameRunning = true;
         }catch(IOException e) {
             e.printStackTrace();
         }
@@ -126,7 +140,6 @@ public class StartGame {
             main.output = new ObjectOutputStream(main.socket.getOutputStream());
             main.input = new ObjectInputStream(main.socket.getInputStream());
             main.connected = true;
-            main.GameRunning = true;
         } catch (UnknownHostException e) {
             e.printStackTrace();
             System.out.println("Creating server.");
@@ -138,7 +151,6 @@ public class StartGame {
             return false;
         }
         System.out.println("Connected");
-        main.GameRunning = true;
         main.isplayerTwo = true;
 
         return true;
