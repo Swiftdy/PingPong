@@ -38,13 +38,9 @@ public class StartGame {
             main.playerOneturn = false;
             main.touches++;
             if ((Main.playerOneYPos + Main.GoalKeeper_Height / 2) >= main.BallYPosition & !main.isplayerTwo) {
-                System.out.println("Player 1: " + (Main.playerOneYPos + Main.GoalKeeper_Height / 2) + " Ball Y: " + main.BallYPosition);
                 main.BallYSpeed = -5 + (int) (Math.random() * ((0 - (-3)) + 1));
-                System.out.println(main.BallYPosition);
             } else if ((Main.playerOneYPos + Main.GoalKeeper_Height / 2) <= main.BallYPosition & !main.isplayerTwo) {
-                System.out.println("Player 1: " + (Main.playerOneYPos + Main.GoalKeeper_Height / 2) + " Ball Y: " + main.BallYPosition);
                 main.BallYSpeed = 5 + (int) (Math.random() * (3 - (0) + 1));
-                System.out.println(main.BallYPosition);
             }
             main.BallXSpeed -= 0.9;
             main.BallXSpeed *= -1;
@@ -108,11 +104,10 @@ public class StartGame {
         }
 
         /* Skappar Goal keepers! */
-        GameBoard.setFill(Color.GHOSTWHITE);
+        GameBoard.setFill(main.EntitiesColor);
         GameBoard.fillRect(main.playerTwoXPos, Main.playerTwoYPos, Main.GoalKeeper_Width, Main.GoalKeeper_Height);
-        GameBoard.setFill(Color.BLUE);
+        GameBoard.setFill(main.EntitiesColor);
         GameBoard.fillRect(main.playerOneXPos, Main.playerOneYPos, Main.GoalKeeper_Width, Main.GoalKeeper_Height);
-        GameBoard.setFill(Color.WHITE);
     }
 
 }

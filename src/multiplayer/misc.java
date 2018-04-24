@@ -1,6 +1,5 @@
 package multiplayer;
 
-
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
@@ -81,10 +80,12 @@ class misc {
             GameBoard.setTextAlign(TextAlignment.CENTER);
             GameBoard.fillText(String.valueOf(main.PlayerTwoScore), Main.width / 0.75, Main.height / 4);
             GameBoard.beginPath();
+            GameBoard.setLineWidth(10);
             GameBoard.moveTo(Main.width / 2, 0);
             GameBoard.lineTo(Main.width / 2, Main.height);
             GameBoard.setFill(Color.WHITE);
             GameBoard.stroke();
+            GameBoard.setLineWidth(1);
             GameBoard.setFill(main.EntitiesColor);
             GameBoard.fillRect(main.BallXPosition, main.BallYPosition, Main.BallRadius, Main.BallRadius);
         } else {
@@ -93,20 +94,36 @@ class misc {
             GameBoard.fillText(Main.startText, Main.width / 2, Main.height / 2);
             GameBoard.setStroke(Color.RED);
             if (!main.Multiplayer) {
-                if (!main.PvC) {
+                if (!main.PvC & !main.Multiplayer) {
+                    GameBoard.setStroke(Color.RED);
+                    GameBoard.setTextAlign(TextAlignment.RIGHT);
+                    GameBoard.strokeText("PvP Enabled    ", Main.width / 2, Main.height / 2 + 50);
+                    GameBoard.setStroke(Color.WHITE);
+                    GameBoard.setTextAlign(TextAlignment.LEFT);
+                    GameBoard.strokeText("   Press 2 to enable PvC.", Main.width / 2, Main.height / 2 + 50);
+                    GameBoard.setTextAlign(TextAlignment.CENTER);
+                    GameBoard.setStroke(Color.WHITE);
+                    GameBoard.strokeText("Press 3 to enable Multiplayer", Main.width / 2, Main.height / 2 + 70);
+                } else if (main.PvC & !main.Multiplayer) {
                     GameBoard.setStroke(Color.WHITE);
                     GameBoard.setTextAlign(TextAlignment.RIGHT);
                     GameBoard.strokeText("Press 1 to enable PvP.    ", Main.width / 2, Main.height / 2 + 50);
                     GameBoard.setStroke(Color.RED);
                     GameBoard.setTextAlign(TextAlignment.LEFT);
-                    GameBoard.strokeText("   Press 2 to enable PvC.", Main.width / 2, Main.height / 2 + 50);
+                    GameBoard.strokeText("   PvC Enabled.", Main.width / 2, Main.height / 2 + 50);
+                    GameBoard.setTextAlign(TextAlignment.CENTER);
+                    GameBoard.setStroke(Color.WHITE);
+                    GameBoard.strokeText("Press 3 to enable Multiplayer", Main.width / 2, Main.height / 2 + 70);
                 } else {
-                    GameBoard.setStroke(Color.RED);
+                    GameBoard.setStroke(Color.WHITE);
                     GameBoard.setTextAlign(TextAlignment.RIGHT);
                     GameBoard.strokeText("Press 1 to enable PvP.    ", Main.width / 2, Main.height / 2 + 50);
                     GameBoard.setStroke(Color.WHITE);
                     GameBoard.setTextAlign(TextAlignment.LEFT);
-                    GameBoard.strokeText("   Press 2 to enable PvC.", Main.width / 2, Main.height / 2 + 50);
+                    GameBoard.strokeText("   PvC Enabled.", Main.width / 2, Main.height / 2 + 50);
+                    GameBoard.setTextAlign(TextAlignment.CENTER);
+                    GameBoard.setStroke(Color.RED);
+                    GameBoard.strokeText("Multiplayer Selected.", Main.width / 2, Main.height / 2 + 70);
                 }
             }
             main.BallXPosition = Main.width / 2;

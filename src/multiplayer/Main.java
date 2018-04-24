@@ -25,51 +25,51 @@ import java.net.SocketException;
 import static javafx.scene.input.KeyCode.*;
 
 public class Main extends Application {
-    public int PlayerOneScore = 0;
-    public int PlayerTwoScore = 0;
-    public static final int GoalKeeper_Height = 120;
-    public static final int GoalKeeper_Width = 25;
     public static double width = 1270;
     public static double height = 720;
     public static double playerOneYPos = height / 2;
     public static double playerTwoYPos = height / 2;
+    public static final double speedConstant = 1.1;
+    public int PlayerOneScore = 0;
+    public int PlayerTwoScore = 0;
+    public static final int GoalKeeper_Height = 120;
+    public static final int GoalKeeper_Width = 25;
     public double playerOneXPos = 5.0;
     public double playerTwoXPos = width - GoalKeeper_Width - 5;
     public double BallYSpeed = 1;
     public double BallXSpeed = 2;
     public double MoveSpeed = 10;
-    static final double BallRadius = 15;
-    static String startText = "Click Enter to start the game";
-    double BallXPosition = width / 2;
-    double BallYPosition = height / 2;
-    boolean GameRunning;
-    boolean PlayOneUP = false;
-    boolean PlayTwoUP = false;
-    boolean PlayOneDown = false;
-    boolean PlayTwoDown = false;
-    boolean playerOneturn = true;
-    boolean playerTwoturn = true;
-    int touches = 0;
-    boolean PvC = false;
-    Color EntitiesColor = Color.WHITE;
-    Color Background = Color.BLACK;
+    public double BallXPosition = width / 2;
+    public double BallYPosition = height / 2;
+    public static String startText = "Click Enter to start the game";
+    public boolean GameRunning;
+    private boolean PlayOneUP = false;
+    private boolean PlayTwoUP = false;
+    private boolean PlayOneDown = false;
+    private boolean PlayTwoDown = false;
+    public boolean playerOneturn = true;
+    public boolean playerTwoturn = true;
+    public int touches = 0;
+    public boolean PvC = false;
+    public static final double BallRadius = 15;
+    public Color EntitiesColor = Color.WHITE;
+    public Color Background = Color.BLACK;
 
-    boolean Multiplayer = false;
+    public boolean Multiplayer = false;
 
     // Multiplayer
-    String ip = "localhost";
-    int port = 22222;
+    public String ip = "localhost   ";
+    public int port = 22222;
     Thread thread;
-
-    Socket socket;
-    ObjectOutputStream output;
-    ObjectInputStream input;
-    int errors = 0;
-    ServerSocket serverSocket;
-    boolean connected = false;
-    boolean NoConnectionWithPartner = false;
-    boolean isplayerOne = false;
-    boolean isplayerTwo = false;
+    public Socket socket;
+    public ObjectOutputStream output;
+    public ObjectInputStream input;
+    public int errors = 0;
+    public ServerSocket serverSocket;
+    public boolean connected = false;
+    public boolean NoConnectionWithPartner = false;
+    public boolean isplayerOne = false;
+    public boolean isplayerTwo = false;
 
 
 
@@ -131,7 +131,7 @@ public class Main extends Application {
                     }
                 }
                 try {
-                    Thread.sleep(5);
+                    thread.sleep(5);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -211,10 +211,90 @@ public class Main extends Application {
                 GameRunning = true;
             }
             if(!GameRunning && key.getCode() == DIGIT3) {
+
                 ip = JOptionPane.showInputDialog("IP");
                 Multiplayer = true;
                 playerOneYPos = height / 2;
                 playerTwoYPos = height / 2;
+
+               /* Stage stage1 = new Stage();
+                GridPane grid = new GridPane();
+                grid.setAlignment(Pos.CENTER);
+                grid.setHgap(10);
+                grid.setVgap(10);
+                grid.setPadding(new Insets(25, 25, 25, 25));
+
+                Scene scene = new Scene(grid, 300, 275);
+                stage1.setScene(scene);
+
+                Text scenetitle = new Text("Multiplayer");
+                scenetitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+                grid.add(scenetitle, 0, 0, 2, 1);
+
+                Label Iplabel = new Label("IP:");
+                grid.add(Iplabel, 0, 1);
+
+                TextField IPField = new TextField();
+                grid.add(IPField, 1, 1);
+
+                Label portlabel = new Label("Port:");
+                grid.add(portlabel, 0, 2);
+
+                TextField portField = new TextField();
+                grid.add(portField, 1, 2);
+
+                Button connect = new Button("Connect");
+
+                connect.setOnAction(e-> {
+
+                Stage stage1 = new Stage();
+                GridPane grid = new GridPane();
+                grid.setAlignment(Pos.CENTER);
+                grid.setHgap(10);
+                grid.setVgap(10);
+                grid.setPadding(new Insets(25, 25, 25, 25));
+
+                Scene scene = new Scene(grid, 300, 275);
+                stage1.setScene(scene);
+
+                Text scenetitle = new Text("Multiplayer");
+                scenetitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+                grid.add(scenetitle, 0, 0, 2, 1);
+
+                Label Iplabel = new Label("IP:");
+                grid.add(Iplabel, 0, 1);
+
+                TextField IPField = new TextField();
+                grid.add(IPField, 1, 1);
+
+                Label portlabel = new Label("Port:");
+                grid.add(portlabel, 0, 2);
+
+                TextField portField = new TextField();
+                grid.add(portField, 1, 2);
+
+                Button connect = new Button("Connect");
+
+                connect.setOnAction(e-> {
+                    String ip = IPField.getText();
+                    System.out.println(ip);
+                    port = 26654;
+                    if(!ip.isEmpty()) {
+                        if(!(port == 0)) {
+                            System.out.println("Hayy!");
+                        }
+                    }else {
+                        System.out.println("noo");
+                    }
+
+
+                });
+                grid.add(connect, 1, 3);
+
+
+
+                stage1.show();
+                });*/
 
 
             }
