@@ -4,23 +4,29 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 
-import javax.swing.*;
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketException;
 
 import static javafx.scene.input.KeyCode.*;
 
@@ -36,40 +42,40 @@ public class Main extends Application {
     public static final int GoalKeeper_Width = 25;
     public double playerOneXPos = 5.0;
     public double playerTwoXPos = width - GoalKeeper_Width - 5;
-    public double BallYSpeed = 1;
-    public double BallXSpeed = 2;
-    public double MoveSpeed = 10;
-    public double BallXPosition = width / 2;
-    public double BallYPosition = height / 2;
+    public static double BallYSpeed = 1;
+    public static double BallXSpeed = 2;
+    public static double MoveSpeed = 10;
+    public static double BallXPosition = width / 2;
+    public static double BallYPosition = height / 2;
     public static String startText = "Click Enter to start the game";
-    public boolean GameRunning;
-    private boolean PlayOneUP = false;
-    private boolean PlayTwoUP = false;
-    private boolean PlayOneDown = false;
-    private boolean PlayTwoDown = false;
+    public static boolean GameRunning;
+    public static boolean PlayOneUP = false;
+    public static boolean PlayTwoUP = false;
+    public static boolean PlayOneDown = false;
+    public static boolean PlayTwoDown = false;
     public boolean playerOneturn = true;
     public boolean playerTwoturn = true;
     public int touches = 0;
-    public boolean PvC = false;
+    public static boolean PvC = false;
     public static final double BallRadius = 15;
     public Color EntitiesColor = Color.WHITE;
     public Color Background = Color.BLACK;
 
-    public boolean Multiplayer = false;
+    public static boolean Multiplayer = false;
 
     // Multiplayer
-    public String ip = "localhost   ";
+    public String ip = "localhost";
     public int port = 22222;
     Thread thread;
     public Socket socket;
-    public ObjectOutputStream output;
-    public ObjectInputStream input;
+    public static ObjectOutputStream output;
+    public static ObjectInputStream input;
     public int errors = 0;
     public ServerSocket serverSocket;
-    public boolean connected = false;
+    public static boolean connected = false;
     public boolean NoConnectionWithPartner = false;
-    public boolean isplayerOne = false;
-    public boolean isplayerTwo = false;
+    public static boolean isplayerOne = false;
+    public static boolean isplayerTwo = false;
 
 
 
@@ -84,91 +90,9 @@ public class Main extends Application {
         StartGame.DrawGame(this, gc);
         TL.setCycleCount(Timeline.INDEFINITE);
         canvas.setFocusTraversable(true);
-        new Thread(() -> {
-            while(true) {
-                if(Multiplayer & connected) {
-                    if(isplayerOne) {
-                        Object[] location = {playerOneYPos, BallYPosition, BallXPosition, BallXSpeed, BallYSpeed, GameRunning};
-                        try {
-                            output.writeObject(location);
-                            output.flush();
-                        } catch (SocketException e) {
-                            Multiplayer = false;
-                        } catch (IOException e) {
 
-                        }
-                        try {
-                            playerTwoYPos = input.readDouble();
-                        } catch (IOException e) {
-
-                        }
-                    }
-                    if(isplayerTwo) {
-                        try {
-                            Object[] location = (Object[]) input.readObject();
-                            playerOneYPos = (double) location[0];
-                            BallYPosition = (double) location[1];
-                            BallXPosition = (double) location[2];
-                            BallXSpeed = (double) location[3];
-                            BallYSpeed = (double) location[4];
-                            GameRunning = (boolean) location[5];
-                        } catch (IOException e) {
-
-                        } catch (ClassNotFoundException e) {
-
-                        }
-
-                        Double player2 = playerTwoYPos;
-                        try {
-                            output.writeDouble(player2);
-                            output.flush();
-                        }catch (SocketException e) {
-                            Multiplayer = false;
-                        }  catch (IOException e) {
-                            e.printStackTrace();
-                        }
-
-                    }
-                }
-                try {
-                    thread.sleep(5);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-        new Thread(() -> {
-            while(true) {
-                if (PlayOneUP && GameRunning) {
-                    if (playerOneYPos > 0) {
-                        playerOneYPos = playerOneYPos - MoveSpeed;
-                    }
-                }
-                if (PlayOneDown && GameRunning) {
-                    if (playerOneYPos + GoalKeeper_Height < height) {
-                        playerOneYPos = playerOneYPos + MoveSpeed;
-                    }
-                }
-                if(!PvC) {
-                    if (PlayTwoUP && GameRunning) {
-                        if (playerTwoYPos > 0) {
-                            playerTwoYPos = playerTwoYPos - MoveSpeed;
-                        }
-                    }
-                    if (PlayTwoDown && GameRunning) {
-                        if (playerTwoYPos + GoalKeeper_Height < height) {
-                            playerTwoYPos = playerTwoYPos + MoveSpeed;
-                        }
-                    }
-                }
-                try {
-                    Thread.sleep(10);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-        EventHandler<KeyEvent> handler1 = key -> {
+        controls.start();
+        EventHandler<KeyEvent> handler1 = (KeyEvent key) -> {
             if (key.getCode() == W) {
                 if(Multiplayer) {
                     if(isplayerOne) {
@@ -211,41 +135,10 @@ public class Main extends Application {
                 GameRunning = true;
             }
             if(!GameRunning && key.getCode() == DIGIT3) {
-
-                ip = JOptionPane.showInputDialog("IP");
-                Multiplayer = true;
+                PlayerOneScore = 0;
+                PlayerTwoScore = 0;
                 playerOneYPos = height / 2;
                 playerTwoYPos = height / 2;
-
-               /* Stage stage1 = new Stage();
-                GridPane grid = new GridPane();
-                grid.setAlignment(Pos.CENTER);
-                grid.setHgap(10);
-                grid.setVgap(10);
-                grid.setPadding(new Insets(25, 25, 25, 25));
-
-                Scene scene = new Scene(grid, 300, 275);
-                stage1.setScene(scene);
-
-                Text scenetitle = new Text("Multiplayer");
-                scenetitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
-                grid.add(scenetitle, 0, 0, 2, 1);
-
-                Label Iplabel = new Label("IP:");
-                grid.add(Iplabel, 0, 1);
-
-                TextField IPField = new TextField();
-                grid.add(IPField, 1, 1);
-
-                Label portlabel = new Label("Port:");
-                grid.add(portlabel, 0, 2);
-
-                TextField portField = new TextField();
-                grid.add(portField, 1, 2);
-
-                Button connect = new Button("Connect");
-
-                connect.setOnAction(e-> {
 
                 Stage stage1 = new Stage();
                 GridPane grid = new GridPane();
@@ -276,12 +169,19 @@ public class Main extends Application {
                 Button connect = new Button("Connect");
 
                 connect.setOnAction(e-> {
-                    String ip = IPField.getText();
+                    if (!IPField.getText().contains("localhost")) {
+                        ip = IPField.getText();
+                    }
                     System.out.println(ip);
-                    port = 26654;
+                    try {
+                        port = Integer.parseInt(portField.getText());
+                    } catch (Exception ex) {
+
+                    }
                     if(!ip.isEmpty()) {
                         if(!(port == 0)) {
-                            System.out.println("Hayy!");
+                            Multiplayer = true;
+                            stage1.hide();
                         }
                     }else {
                         System.out.println("noo");
@@ -290,19 +190,17 @@ public class Main extends Application {
 
                 });
                 grid.add(connect, 1, 3);
-
-
-
                 stage1.show();
-                });*/
-
-
             }
             if(!GameRunning && key.getCode() == DIGIT2) {
                 PvC = true;
+                PlayerOneScore = 0;
+                PlayerTwoScore = 0;
             }
             if(!GameRunning && key.getCode() == DIGIT1) {
                 PvC = false;
+                PlayerOneScore = 0;
+                PlayerTwoScore = 0;
             }
         };
         EventHandler<KeyEvent> handler2 = key -> {
